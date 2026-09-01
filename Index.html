@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบฟอร์มลงทะเบียนนักศึกษา | QA Testing</title>
+<style>
+:root{
+  --primary:#2563eb; --primary2:#1d4ed8; --bg:#eef4ff; --card:#ffffff;
+  --text:#172033; --muted:#64748b; --border:#dbe3ef; --danger:#dc2626;
+  --success:#15803d; --shadow:0 18px 50px rgba(30,64,175,.12);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:"Noto Sans Thai","Tahoma",sans-serif;
+  background:linear-gradient(135deg,#eef4ff 0%,#f8fafc 55%,#e0ecff 100%);
+  color:var(--text); min-height:100vh;
+}
+header{
+  background:linear-gradient(120deg,#1e3a8a,#2563eb);
+  color:white; padding:22px 5%;
+  display:flex; justify-content:space-between; align-items:center; gap:20px;
+}
+.brand{font-size:1.15rem;font-weight:800}
+.brand small{display:block;font-weight:400;opacity:.8;margin-top:3px}
+.student-badge{
+  background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.25);
+  border-radius:12px;padding:9px 14px;font-size:.9rem;
+}
+.container{max-width:1050px;margin:42px auto;padding:0 20px}
+.hero{margin-bottom:24px}
+.hero h1{margin:0 0 8px;font-size:clamp(1.7rem,4vw,2.5rem)}
+.hero p{margin:0;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+.card-head{padding:24px 28px;border-bottom:1px solid var(--border);background:#f8fbff}
+.card-head h2{margin:0 0 5px;font-size:1.2rem}
+.card-head p{margin:0;color:var(--muted);font-size:.92rem}
+form{padding:28px}
+.section-title{
+  display:flex;align-items:center;gap:10px;margin:4px 0 20px;
+  font-size:1.05rem;font-weight:800;color:#1e3a8a;
+}
+.section-title span{
+  width:30px;height:30px;border-radius:9px;background:#dbeafe;
+  display:grid;place-items:center;color:#1d4ed8;font-size:.85rem;
+}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.full{grid-column:1/-1}
+.field label{display:block;font-weight:700;margin-bottom:7px;font-size:.94rem}
+.required{color:var(--danger)}
+input,select,textarea{
+  width:100%; border:1.5px solid var(--border); border-radius:11px;
+  padding:12px 13px; font:inherit; color:var(--text); background:white;
+  outline:none; transition:.2s;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(37,99,235,.10)}
+textarea{resize:vertical;min-height:105px}
+.hint{font-size:.78rem;color:var(--muted);margin-top:6px}
+.error{font-size:.8rem;color:var(--danger);margin-top:6px;min-height:18px}
+.invalid{border-color:var(--danger)!important;background:#fff7f7}
+.choice-wrap{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px
+}
+.choice{
+  border:1.5px solid var(--border);border-radius:11px;padding:12px;
+  display:flex;align-items:center;gap:8px;cursor:pointer;background:#fff;
+}
+.choice:hover{border-color:#93c5fd;background:#f8fbff}
+.choice input{width:auto}
+.file-box{
+  border:1.5px dashed #9db7dc;border-radius:12px;padding:18px;background:#f8fbff
+}
+.actions{display:flex;gap:12px;justify-content:flex-end;margin-top:26px;padding-top:22px;border-top:1px solid var(--border)}
+button{
+  border:0;border-radius:11px;padding:12px 22px;font:inherit;font-weight:800;cursor:pointer
+}
+.primary{background:linear-gradient(120deg,var(--primary),var(--primary2));color:white}
+.secondary{background:#eef2f7;color:#334155}
+.primary:hover{filter:brightness(.96)}
+.summary{
+  display:none;margin:22px 28px 28px;padding:18px;border-radius:13px;
+  background:#ecfdf3;border:1px solid #bbf7d0;color:#166534
+}
+footer{text-align:center;color:#94a3b8;padding:25px;font-size:.82rem}
+@media(max-width:700px){
+  header{align-items:flex-start;flex-direction:column}
+  .grid,.choice-wrap{grid-template-columns:1fr}
+  .full{grid-column:auto}
+  form{padding:20px}
+  .card-head{padding:20px}
+  .actions{flex-direction:column-reverse}
+  button{width:100%}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    Student QA Lab
+    <small>แบบฝึกหัดการออกแบบฟอร์มและทดสอบ Validation</small>
+  </div>
+  <div class="student-badge">รหัสนักศึกษา: 6612345678 | ชื่อ: ณัฐพงษ์ เจริญตา</div>
+</header>
+
+<main class="container">
+  <div class="hero">
+    <h1>แบบฟอร์มลงทะเบียนเข้าร่วมกิจกรรม</h1>
+    <p>กรอกข้อมูลให้ครบถ้วน ระบบจะตรวจสอบความถูกต้องของข้อมูลก่อนส่งแบบฟอร์ม</p>
+  </div>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Student Registration Form</h2>
+      <p>ช่องที่มีเครื่องหมาย <span class="required">*</span> จำเป็นต้องกรอก</p>
+    </div>
+
+    <form id="registrationForm" novalidate>
+      <div class="section-title"><span>1</span>ข้อมูลส่วนตัว</div>
+      <div class="grid">
+        <div class="field">
+          <label for="studentId">รหัสนักศึกษา <span class="required">*</span></label>
+          <input id="studentId" type="text" placeholder="เช่น 6612345678" maxlength="10" required>
+          <div class="hint">กรอกตัวเลข 10 หลัก</div>
+          <div class="error" id="studentIdError"></div>
+        </div>
+
+        <div class="field">
+          <label for="firstName">ชื่อ <span class="required">*</span></label>
+          <input id="firstName" type="text" placeholder="เช่น สมชาย" required>
+          <div class="error" id="firstNameError"></div>
+        </div>
+
+        <div class="field">
+          <label for="lastName">นามสกุล <span class="required">*</span></label>
+          <input id="lastName" type="text" placeholder="เช่น ใจดี" required>
+          <div class="error" id="lastNameError"></div>
+        </div>
+
+        <div class="field">
+          <label for="email">อีเมล <span class="required">*</span></label>
+          <input id="email" type="email" placeholder="example@email.com" required>
+          <div class="error" id="emailError"></div>
+        </div>
+
+        <div class="field">
+          <label for="phone">เบอร์โทรศัพท์ <span class="required">*</span></label>
+          <input id="phone" type="tel" placeholder="0812345678" maxlength="10" required>
+          <div class="hint">ต้องเป็นตัวเลข 10 หลัก</div>
+          <div class="error" id="phoneError"></div>
+        </div>
+
+        <div class="field">
+          <label for="dob">วันเดือนปีเกิด <span class="required">*</span></label>
+          <input id="dob" type="date" required>
+          <div class="error" id="dobError"></div>
+        </div>
+
+        <div class="field full">
+          <label>เพศ <span class="required">*</span></label>
+          <div class="choice-wrap">
+            <label class="choice"><input type="radio" name="gender" value="ชาย"> ชาย</label>
+            <label class="choice"><input type="radio" name="gender" value="หญิง"> หญิง</label>
+            <label class="choice"><input type="radio" name="gender" value="ไม่ระบุ"> ไม่ระบุ</label>
+          </div>
+          <div class="error" id="genderError"></div>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:30px"><span>2</span>ข้อมูลการเข้าร่วม</div>
+      <div class="grid">
+        <div class="field">
+          <label for="department">สาขาวิชา / หน่วยงาน <span class="required">*</span></label>
+          <select id="department" required>
+            <option value="">-- กรุณาเลือก --</option>
+            <option>เทคโนโลยีสารสนเทศ</option>
+            <option>วิทยาการคอมพิวเตอร์</option>
+            <option>วิศวกรรมซอฟต์แวร์</option>
+            <option>บริหารธุรกิจ</option>
+            <option>อื่น ๆ</option>
+          </select>
+          <div class="error" id="departmentError"></div>
+        </div>
+
+        <div class="field">
+          <label for="experience">ประสบการณ์ด้าน IT</label>
+          <select id="experience">
+            <option>ไม่มีประสบการณ์</option>
+            <option>น้อยกว่า 1 ปี</option>
+            <option>1–3 ปี</option>
+            <option>มากกว่า 3 ปี</option>
+          </select>
+        </div>
+
+        <div class="field full">
+          <label>หัวข้อที่สนใจ</label>
+          <div class="choice-wrap">
+            <label class="choice"><input type="checkbox" name="interest" value="Web"> Web Development</label>
+            <label class="choice"><input type="checkbox" name="interest" value="QA"> Software QA</label>
+            <label class="choice"><input type="checkbox" name="interest" value="UI"> UX/UI Design</label>
+          </div>
+        </div>
+
+        <div class="field full">
+          <label for="file">แนบเอกสารประกอบ</label>
+          <div class="file-box">
+            <input id="file" type="file" accept=".pdf,.jpg,.jpeg,.png">
+            <div class="hint">รองรับ PDF, JPG, JPEG, PNG ขนาดไม่เกิน 5 MB</div>
+            <div class="error" id="fileError"></div>
+          </div>
+        </div>
+
+        <div class="field full">
+          <label for="comment">หมายเหตุเพิ่มเติม</label>
+          <textarea id="comment" maxlength="300" placeholder="ระบุข้อมูลเพิ่มเติม (ถ้ามี)"></textarea>
+          <div class="hint"><span id="counter">0</span>/300 ตัวอักษร</div>
+        </div>
+
+        <div class="field full">
+          <label class="choice">
+            <input id="terms" type="checkbox">
+            ฉันยืนยันว่าข้อมูลที่กรอกเป็นความจริงและยอมรับเงื่อนไขการลงทะเบียน <span class="required">*</span>
+          </label>
+          <div class="error" id="termsError"></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="reset" class="secondary">ล้างข้อมูล</button>
+        <button type="submit" class="primary">ตรวจสอบและส่งข้อมูล</button>
+      </div>
+    </form>
+
+    <div class="summary" id="successBox">
+      <strong>ส่งข้อมูลสำเร็จ!</strong><br>
+      ระบบตรวจสอบข้อมูลเบื้องต้นเรียบร้อยแล้ว สามารถใช้หน้านี้เป็นโจทย์สำหรับ Tester ได้
+    </div>
+  </section>
+</main>
+
+<footer>QA Practice Form • Designed for classroom testing exercise</footer>
+
+<script>
+const form = document.getElementById("registrationForm");
+const counter = document.getElementById("counter");
+const comment = document.getElementById("comment");
+const successBox = document.getElementById("successBox");
+
+comment.addEventListener("input", () => counter.textContent = comment.value.length);
+
+function setError(id, message){
+  const input = document.getElementById(id);
+  const box = document.getElementById(id + "Error");
+  if(input) input.classList.toggle("invalid", !!message);
+  if(box) box.textContent = message || "";
+  return !message;
+}
+
+function clearErrors(){
+  document.querySelectorAll(".error").forEach(e => e.textContent = "");
+  document.querySelectorAll(".invalid").forEach(e => e.classList.remove("invalid"));
+}
+
+form.addEventListener("submit", function(e){
+  e.preventDefault();
+  clearErrors();
+  let ok = true;
+
+  const studentId = document.getElementById("studentId").value.trim();
+  const firstName = document.getElementById("firstName").value.trim();
+  const lastName = document.getElementById("lastName").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const dob = document.getElementById("dob").value;
+  const department = document.getElementById("department").value;
+  const gender = document.querySelector('input[name="gender"]:checked');
+  const terms = document.getElementById("terms").checked;
+
+  if(!/^\d{10}$/.test(studentId)){
+    setError("studentId","รหัสนักศึกษาต้องเป็นตัวเลข 10 หลัก");
+    ok=false;
+  }
+  if(firstName.length < 2){
+    setError("firstName","กรุณากรอกชื่ออย่างน้อย 2 ตัวอักษร");
+    ok=false;
+  }
+  if(lastName.length < 2){
+    setError("lastName","กรุณากรอกนามสกุลอย่างน้อย 2 ตัวอักษร");
+    ok=false;
+  }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    setError("email","รูปแบบอีเมลไม่ถูกต้อง");
+    ok=false;
+  }
+
+  /* BUG #1 (intentional):
+     เบอร์โทรที่มี 9 หลักจะผ่าน validation ทั้งที่ข้อความกำหนด 10 หลัก */
+  if(!/^\d{9,10}$/.test(phone)){
+    setError("phone","เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลัก");
+    ok=false;
+  }
+
+  if(!dob){
+    setError("dob","กรุณาเลือกวันเกิด");
+    ok=false;
+  }else if(new Date(dob) > new Date()){
+    setError("dob","วันเกิดต้องไม่เป็นวันในอนาคต");
+    ok=false;
+  }
+
+  if(!gender){
+    document.getElementById("genderError").textContent = "กรุณาเลือกเพศ";
+    ok=false;
+  }
+  if(!department){
+    setError("department","กรุณาเลือกสาขาวิชา / หน่วยงาน");
+    ok=false;
+  }
+
+  /* BUG #2 (intentional):
+     ระบบตรวจชนิดไฟล์ แต่ไม่ได้ตรวจขนาดไฟล์จริงตามที่ระบุไว้ว่าไม่เกิน 5 MB */
+  const file = document.getElementById("file").files[0];
+  if(file){
+    const allowed = [".pdf",".jpg",".jpeg",".png"];
+    const ext = "." + file.name.split(".").pop().toLowerCase();
+    if(!allowed.includes(ext)){
+      setError("file","ชนิดไฟล์ไม่รองรับ");
+      ok=false;
+    }
+  }
+
+  if(!terms){
+    document.getElementById("termsError").textContent = "กรุณายืนยันเงื่อนไขก่อนส่งข้อมูล";
+    ok=false;
+  }
+
+  if(ok){
+    successBox.style.display = "block";
+    successBox.scrollIntoView({behavior:"smooth", block:"center"});
+  }else{
+    const firstInvalid = document.querySelector(".invalid");
+    if(firstInvalid) firstInvalid.focus();
+  }
+});
+
+form.addEventListener("reset", () => {
+  setTimeout(() => {
+    clearErrors();
+    counter.textContent = "0";
+    successBox.style.display = "none";
+  }, 0);
+});
+</script>
+</body>
+</html>
