@@ -278,6 +278,14 @@ function clearErrors(){
   document.querySelectorAll(".invalid").forEach(e => e.classList.remove("invalid"));
 }
 
+form.addEventListener("input", () => {
+  successBox.style.display = "none";
+});
+
+form.addEventListener("change", () => {
+  successBox.style.display = "none";
+});
+
 form.addEventListener("submit", function(e){
   e.preventDefault();
   clearErrors();
@@ -310,9 +318,8 @@ form.addEventListener("submit", function(e){
     ok=false;
   }
 
-  /* BUG #1 (intentional):
-     เบอร์โทรที่มี 9 หลักจะผ่าน validation ทั้งที่ข้อความกำหนด 10 หลัก */
-  if(!/^\d{9,10}$/.test(phone)){
+  // ตรวจสอบเบอร์โทรให้เป็นตัวเลข 10 หลักตามข้อกำหนด
+  if(!/^\d{10}$/.test(phone)){
     setError("phone","เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลัก");
     ok=false;
   }
@@ -327,6 +334,7 @@ form.addEventListener("submit", function(e){
 
   if(!gender){
     document.getElementById("genderError").textContent = "กรุณาเลือกเพศ";
+    document.querySelectorAll('input[name="gender"]').forEach(el => el.classList.add("invalid"));
     ok=false;
   }
   if(!department){
@@ -334,20 +342,27 @@ form.addEventListener("submit", function(e){
     ok=false;
   }
 
-  /* BUG #2 (intentional):
-     ระบบตรวจชนิดไฟล์ แต่ไม่ได้ตรวจขนาดไฟล์จริงตามที่ระบุไว้ว่าไม่เกิน 5 MB */
-  const file = document.getElementById("file").files[0];
+  // ตรวจสอบชนิดไฟล์และขนาดไฟล์จริงไม่เกิน 5 MB
+  const fileInput = document.getElementById("file");
+  const file = fileInput.files[0];
   if(file){
-    const allowed = [".pdf",".jpg",".jpeg",".png"];
+    const allowedExt = [".pdf",".jpg",".jpeg",".png"];
+    const allowedMime = ["application/pdf","image/jpeg","image/png"];
     const ext = "." + file.name.split(".").pop().toLowerCase();
-    if(!allowed.includes(ext)){
-      setError("file","ชนิดไฟล์ไม่รองรับ");
+    const maxSize = 5 * 1024 * 1024;
+
+    if(!allowedExt.includes(ext) || !allowedMime.includes(file.type)){
+      setError("file","ชนิดไฟล์ไม่รองรับ กรุณาเลือก PDF, JPG, JPEG หรือ PNG");
+      ok=false;
+    }else if(file.size > maxSize){
+      setError("file","ขนาดไฟล์ต้องไม่เกิน 5 MB");
       ok=false;
     }
   }
 
   if(!terms){
     document.getElementById("termsError").textContent = "กรุณายืนยันเงื่อนไขก่อนส่งข้อมูล";
+    document.getElementById("terms").classList.add("invalid");
     ok=false;
   }
 
