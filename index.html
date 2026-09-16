@@ -132,13 +132,13 @@ footer{text-align:center;color:#94a3b8;padding:25px;font-size:.82rem}
 
         <div class="field">
           <label for="firstName">ชื่อ <span class="required">*</span></label>
-          <input id="firstName" type="text" placeholder="เช่น สมชาย" required>
+          <input id="firstName" type="text" placeholder="เช่น สมชาย" required pattern="[A-Za-zก-๙\s]+" oninput="this.value=this.value.replace(/[^A-Za-zก-๙\s]/g,'')">
           <div class="error" id="firstNameError"></div>
         </div>
 
         <div class="field">
           <label for="lastName">นามสกุล <span class="required">*</span></label>
-          <input id="lastName" type="text" placeholder="เช่น ใจดี" required>
+          <input id="lastName" type="text" placeholder="เช่น ใจดี" required pattern="[A-Za-zก-๙\s]+" oninput="this.value=this.value.replace(/[^A-Za-zก-๙\s]/g,'')">
           <div class="error" id="lastNameError"></div>
         </div>
 
@@ -305,12 +305,12 @@ form.addEventListener("submit", function(e){
     setError("studentId","รหัสนักศึกษาต้องเป็นตัวเลข 10 หลัก");
     ok=false;
   }
-  if(firstName.length < 2){
-    setError("firstName","กรุณากรอกชื่ออย่างน้อย 2 ตัวอักษร");
+  if(!/^[A-Za-zก-๙\s]+$/.test(firstName) || firstName.replace(/\s/g,"").length < 2){
+    setError("firstName","ชื่อห้ามมีตัวเลขหรืออักขระพิเศษ และต้องมีอย่างน้อย 2 ตัวอักษร");
     ok=false;
   }
-  if(lastName.length < 2){
-    setError("lastName","กรุณากรอกนามสกุลอย่างน้อย 2 ตัวอักษร");
+  if(!/^[A-Za-zก-๙\s]+$/.test(lastName) || lastName.replace(/\s/g,"").length < 2){
+    setError("lastName","นามสกุลห้ามมีตัวเลขหรืออักขระพิเศษ และต้องมีอย่างน้อย 2 ตัวอักษร");
     ok=false;
   }
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
